@@ -1,0 +1,3 @@
+[submodule "old_subjects_notes"]
+	path = old_subjects_notes
+	url = https://github.com/magic428/old_subjects_notes.git
