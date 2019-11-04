@@ -1,0 +1,123 @@
+# pycharm project
+.idea
+__pycache__
+breakpoint.txt
+
+# video file
+*~
+*.avi
+
+# ipython file
+#*.ipynb  上传 inotebook 文件 
+.ipynb_checkpoints/
+.ipynb_checkpoints
+*.npy
+
+# backup files
+*~
+
+# log files
+*.log
+logs
+log
+
+# dot files
+.*
+
+# git
+!.gitignore
+
+# make file
+*~
+*.o
+*.o.d
+core
+*.ko
+*.mod
+*.mod.c
+a.out
+Module.symvers
+modules.order
+
+# vs project files
+x64/
+Debug/
+Release/
+*.dll
+*.dir/
+*.user
+*.VC.VC.opendb
+*.VC.db
+ALL_BUILD.*
+# Setup/ VS2015 Install Shield 
+Express/
+
+# cmake
+build/
+bin/
+
+# caffemodels
+caffemodels/
+
+# c_blind_clear
+a.out
+
+# python compile
+*.pyc
+
+# qt build directorys
+*.pro.user
+build-*Debug/
+build-*Release/
+build-*Default/
+build-*/
+build/
+*.user
+
+# image_process
+output.png
+output.avi
+output.jpg
+out.png
+out.avi
+out.jpg
+de*.jpg
+de*.png
+de*.avi
+
+# gitbook
+_book/
+node_modules/
+
+# VS Code Config
+.vscode/
+settings.json
+tasks.json
+c_cpp_properties.json
+
+# yolo_coco images
+deeplearning/yolo/tools/annotations/
+deeplearning/yolo/tools/images/
+
+
+## yolo_coco data
+train2014/
+val2014/
+train2017/
+val2017/
+
+*_train*.json
+*_val*.json
+*breakpoint.txt
+roi/
+
+## python
+*.*~
+__pycache__/
+*.pkl
+**/*.egg-info
+.python-version
+Mnist_data/
+*.ckpt
+
+res-capd/
