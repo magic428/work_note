@@ -42,18 +42,18 @@ vultr 实际上是折算成小时来计费的, 比如服务器是 5 美元 1 个
 
 账号充值如图:   
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/payment.png)  
+![](snapshots/payment.png)  
 
 开通服务器步骤如图:   
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/deploy-1.png)  
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/deploy-2.png)  
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/deploy-3.png)  
+![](snapshots/deploy-1.png)  
+![](snapshots/deploy-2.png)  
+![](snapshots/deploy-3.png)  
 
 点击图中的 CentOS 几个字, 会弹出 centos6, 然后选中 centos6！  (不要选默认的 centos8, 脚本不支持 centos8！) 
 开通服务器时, 当出现了 ip, 不要立马去 ping 或者用 xshell 去连接, 再等 5 分钟之后, 有个缓冲时间.  完成购买后, 找到系统的密码记下来, 部署服务器时需要用到.  vps 系统 (推荐 centos6) 的密码获取方法如下图:   
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/server_details.png)  
+![](snapshots/server_details.png)  
 
 一个被墙 ip 的 vps 被删掉后, 其 ip 并不会消失, 会随机分配给下一个在这个服务器位置新建服务器的人, 这就是为什么开新服务器会有一定几率开到被墙的 ip.  被墙是指在国内地区无法 ping 通服务器, 但在国外是可以 ping 通的, vultr 是面向全球服务, 如果这个被墙 ip 被国外的人开到了, 它是可以被正常使用的, 半年或1年后这个被墙的 ip 可能会被国内防火墙解封, 那么这就是一个良性循环.    
 
@@ -116,7 +116,7 @@ chmod +x shadowsocksR.sh
 bash ssr.sh
 ```
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/install_ss-1.png)  
+![](snapshots/install_ss-1.png)  
 
 如上图出现管理界面后, 输入数字 1 来安装 SSR 服务端.  如果输入 1 后不能进入下一步, 那么请退出 xshell, 重新连接 vps 服务器, 然后输入快捷管理命令 bash ssr.sh 再尝试.    
 
@@ -179,7 +179,7 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
 
 锐速安装成功标志如下:   
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/server_accelerate_success.png)  
+![](snapshots/server_accelerate_success.png)  
 
 出现 running 字样即可!  
 
@@ -199,13 +199,13 @@ iOS: 目前大陆 App Store 商店很多 SS/SSR 软件都被下架了, 我们需
 
 有了账号后, 打开 SSR 客户端, 填上信息, 这里以 windows 版的 SSR 客户端为例子:   
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/login_ssr.png)  
+![](snapshots/login_ssr.png)  
 
 在对应的位置, 填上服务器 ip、服务器端口、密码、加密方式、协议和混淆, 最后将浏览器的代理设置为 (http) 127.0.0.1和1080 即可.  账号的端口号就是你自己设置的, 而要上网的浏览器的端口号是 1080, 固定的, 谷歌浏览器可以通过 SwitchyOmega 插件来设置.  
 
 启动 SSR 客户端后, 右键 SSR 客户端图标, 选择第一个“系统代理模式”, 里面有 3 个子选项, 选择"全局模式“, 之后就可以用浏览器设置好了的代理模式 (http) 127.0.0.1 和 1080 翻墙, 此模式下所有的网站都会走 SSR 代理.    
 
-![](https://raw.githubusercontent.com/magic428/work_note/master/ubuntu_os_usage/doc/git_usage/snapshots/ssr-client.png)  
+![](snapshots/ssr-client.png)  
 
 ## 常见问题参考解决方法  
 
