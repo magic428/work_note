@@ -102,26 +102,6 @@ VS 2015 的编译结果主要包括 4 个部分：
 
 Qt Creator 环境下的 designer 是看不见 QVTKWidget 插件的，所以不能直接拖放。需先拖放 QWidget，然后再选择 QWidget 提升为 QVTKWidget。  
 
-## 5、在 VS2015 环境下使用 VTK  
-
-5.1) 安装 Qt Visual Studio Tools  
-
-需要在 VS2015 的扩展和更新中安装 Qt Visual Studio Tools 扩展工具。  
-
-**注意: 不要安装 QtPackage, 因为不能使用 QVTKWidget 插件.**   
-
-安装步骤如下：  
-
-- 打开 VS2015，选择菜单“工具” → 点击“扩展和更新” 。
-- 在“扩展和更新”窗口中，点击“联机”，然后在右侧输入框输入“Qt”，并按下“Enter”键;  
-- 选择 Qt Visual Studio Tools 工具下载安装即可。
-
-**再次提示：不要装 QtPackage 工具**。  
-
-安装成功后，VS2015 菜单上会出现 Qt VS Tools,点击 Launch Qt Designer 就能看到.  
-
-另外，qt-vs-addin 工具也可实现 QT 在 VS 下编译运行。安装配置请参考 Qt 在 VS(Visual Studio) 中使用: https://www.cnblogs.com/techiel/p/7942352.html 。  
-
 ## ISSUES  
 
 1) PCL-1.8.1 + VTK-8.2.0: `error: ‘class vtkDataSetMapper’ has no member named ‘ImmediateModeRenderingOff‘`  
