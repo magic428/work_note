@@ -1,4 +1,4 @@
-## Ubuntu 16.04 下源码编译安装 OpenCV 3.2.0
+## Ubuntu 18.04 下源码编译安装 OpenCV 3.2.0
 
 ## 1. 安装依赖包
 
@@ -14,38 +14,34 @@ ffmpeg or libav development packages: libavcodec-dev, libavformat-dev, libswscal
 [optional] libjpeg-dev, libpng-dev, libtiff-dev, libjasper-dev, libdc1394-22-dev
 
 ```bash
-$ sudo apt-get install build-essential
-$ sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-$ sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev # 处理图像所需的包
-$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev liblapacke-dev libopenblas-dev
-$ sudo apt-get install libxvidcore-dev libx264-dev # 处理视频所需的包
-$ sudo apt-get install libatlas-base-dev gfortran # 优化opencv功能
-$ sudo apt-get install ffmpeg libgstreamer-plugins-base1.0-dev libavresample-dev libgphoto2-dev
-
+sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev 
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev liblapacke-dev libopenblas-dev
+sudo apt-get install libxvidcore-dev libx264-dev libatlas-base-dev gfortran  ffmpeg libgstreamer-plugins-base1.0-dev libavresample-dev libgphoto2-dev
+# ubuntu 1804 需要单独安装 jasper 库  
 sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
 sudo apt update
 sudo apt install libjasper1 libjasper-dev
-
 ```
 
-       set(OPENCV_ICV_URL "https://raw.githubusercontent.com/opencv/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_linux_20151201.tgz")
+## 2. 下载 opencv 3.2.0
 
+需要下载 opencv 和 opencv_contrib, 因为 opencv3 以后 SIFT 和 SURF 之类的属性被移到了 contrib 中.  
 
-https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz
+```bash
+$ wget https://github.com/opencv/opencv/archive/3.2.0.zip 
+$ wget https://github.com/opencv/opencv_contrib/archive/3.2.0.zip
+```
 
-vgg_download(vgg_generated_48.i VGG_48)
-vgg_download(vgg_generated_64.i VGG_64)
-vgg_download(vgg_generated_80.i VGG_80)
-vgg_download(vgg_generated_120.i VGG_120)
+然后分别解压两个压缩包, 将其中一个 opencv_contrib_3.2 移动到 opencv_3.2.0/ 目录下.  
 
-set(FILE_HASH_VGG_48 "e8d0dcd54d1bcfdc29203d011a797179")
-set(FILE_HASH_VGG_64 "7126a5d9a8884ebca5aea5d63d677225")
-set(FILE_HASH_VGG_80 "7cd47228edec52b6d82f46511af325c5")
-set(FILE_HASH_VGG_120 "151805e03568c9f490a5e3a872777b75")
+接下来使用 CMake 进行预配置, 但是会下载很多包, 速度很慢. 可以提前将这些包下载好之后放入对应的目录内. 以下是几个重要文件的下载地址:  
 
+https://raw.githubusercontent.com/opencv/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_linux_20151201.tgz  
 
-mkdir e8d0dcd54d1bcfdc29203d011a797179 && cd e8d0dcd54d1bcfdc29203d011a797179/ && wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_48.i
+https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz  
 
+mkdir e8d0dcd54d1bcfdc29203d011a797179 && cd e8d0dcd54d1bcfdc29203d011a797179/ && wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_48.i  
 
 mkdir 7126a5d9a8884ebca5aea5d63d677225 && cd 7126a5d9a8884ebca5aea5d63d677225/ && wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/vgg_generated_64.i
 
@@ -61,16 +57,7 @@ mkdir 151805e03568c9f490a5e3a872777b75 && cd 151805e03568c9f490a5e3a872777b75/ &
 
 /home/magic/opt/opencv-3.2.0/opencv_contrib-3.2.0/modules/xfeatures2d/cmake/.download/
 
-## 2. 下载 opencv 3.2.0
 
-需要下载 opencv 和 opencv_contrib, 因为 opencv3 以后 SIFT 和 SURF 之类的属性被移到了 contrib 中.  
-
-```bash
-$ wget https://github.com/opencv/opencv/archive/3.2.0.zip 
-$ wget https://github.com/opencv/opencv_contrib/archive/3.2.0.zip
-```
-
-然后分别解压两个压缩包, 将其中一个 opencv_contrib_3.2 移动到 opencv_3.2.0/ 目录下.  
 
 ## 3. 配置编译 opencv
 
@@ -91,6 +78,7 @@ $ cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D WITH_TBB=ON \
     -D WITH_LIBV4L=ON \
     -D WITH_V4L=OFF \
+    -D ENABLE_PRECOMPILED_HEADERS=OFF \
     -D WITH_QT=ON \  # 如果qt未安装可以删去此行;
     -D WITH_GTK=ON \
     -D WITH_OPENGL=ON \
@@ -101,13 +89,45 @@ $ sudo make install
 $ sudo ldconfig
 ```
 
-cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local/opencv3.2 -D INSTALL_PYTHON_EXAMPLES=ON -D INSTALL_C_EXAMPLES=OFF -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.2.0/modules -D PYTHON_EXCUTABLE=/usr/bin/python3 -D WITH_TBB=ON -D WITH_LIBV4L=ON -D WITH_V4L=OFF -D WITH_QT=ON -D WITH_GTK=ON -D WITH_OPENGL=ON -D WITH_CUDA=OFF -D BUILD_EXAMPLES=ON .. 
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local/opencv3.2 -D INSTALL_PYTHON_EXAMPLES=ON -D INSTALL_C_EXAMPLES=OFF -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.2.0/modules -D PYTHON_EXCUTABLE=/usr/bin/python3 -D WITH_TBB=ON -D WITH_LIBV4L=ON -D WITH_V4L=OFF -D WITH_QT=ON -D WITH_GTK=ON -D WITH_OPENGL=ON -D WITH_CUDA=OFF -D BUILD_EXAMPLES=ON -D CUDA_GENERATION=Kepler -D WITH_CUDA=OFF -D WITH_FFMPEG=OFF -DENABLE_PRECOMPILED_HEADERS=OFF .. 
 
 其中,  
 
 - CMAKE_INSTALL_PREFIX: 安装的 python 目录前缀, 其实就是指定了 python 模块的安装路径: CMAKE_INSTALL_PREFIX/lib/python2.7/dist-packages. 获取该路径的方式可以用python -c "import sys; print sys.prefix"  
 - PYTHON_EXCUTABLE: 指定 python 路径
 - OPENCV_EXTRA_MODULES_PATH: 指定 opencv_contrib 所在路径  
+
+
+安装所有的 `lib` 文件都会被安装到 `/usr/local` 目录。   
+
+**注意命令行的设置参数都是有原因的**:   
+
+1) 加上 `-D CUDA_GENERATION=Kepler` 或者 `-D CUDA_GENERATION=auto` 是因为我的显卡计算能力较弱，会报如下错误： 
+
+```
+nvcc fatal   : Unsupported gpu architecture 'compute_11'
+CMake Error at cuda_compile_generated_matrix_operations.cu.o.cmake:208 (message):
+  Error generating
+```
+
+2) 加上 `-DENABLE_PRECOMPILED_HEADERS=OFF` 是为了防止编译的时候找不到 stdlib.h   
+
+```bash
+Error compiling OpenCV, fatal error: stdlib.h: No such file or directory
+```
+
+Try by disabling pre-compiled headers, either from cmake-gui or using the command line parameter:  
+
+```bash
+-DENABLE_PRECOMPILED_HEADERS=OFF
+```
+
+3) 加上 `-D WITH_FFMPEG=OFF` 是为了防止编译的时候 ffmpeg error   
+
+```bash
+ffmpeg_codecs.hpp:104:7: error: ‘CODEC_ID_H264’ was not declared in this scope
+```
+
 
 (2) NVIDIA CUDA 版本  
 
@@ -197,8 +217,7 @@ VideoIO
 安装完成之后的输出信息:   
 
 ```bash
-Install the project...
--- Install configuration: "RELEASE"
+Install the project...-- Install configuration: "RELEASE"
 -- Installing: /usr/local/opencv3.2/include/opencv2/cvconfig.h
 -- Installing: /usr/local/opencv3.2/include/opencv2/opencv_modules.hpp
 -- Installing: /usr/local/opencv3.2/lib/pkgconfig/opencv.pc
@@ -206,72 +225,9 @@ Install the project...
 -- Installing: /usr/local/opencv3.2/share/OpenCV/OpenCVModules-release.cmake
 -- Installing: /usr/local/opencv3.2/share/OpenCV/OpenCVConfig-version.cmake
 -- Installing: /usr/local/opencv3.2/share/OpenCV/OpenCVConfig.cmake
--- Installing: /usr/local/opencv3.2/include/opencv/cxcore.hpp
--- Installing: /usr/local/opencv3.2/include/opencv/cxeigen.hpp
 -- Installing: /usr/local/opencv3.2/include/opencv/cv.h
--- Installing: /usr/local/opencv3.2/include/opencv/ml.h
--- Installing: /usr/local/opencv3.2/include/opencv/cvwimage.h
--- Installing: /usr/local/opencv3.2/include/opencv/cvaux.hpp
--- Installing: /usr/local/opencv3.2/include/opencv/cxcore.h
--- Installing: /usr/local/opencv3.2/include/opencv/cxmisc.h
--- Installing: /usr/local/opencv3.2/include/opencv/highgui.h
--- Installing: /usr/local/opencv3.2/include/opencv/cvaux.h
--- Installing: /usr/local/opencv3.2/include/opencv/cv.hpp
--- Installing: /usr/local/opencv3.2/include/opencv2/opencv.hpp
-
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/calibrate.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/tst_scene_render.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/houghcircles.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/video.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/opt_flow.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/browse.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/letter_recog.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/squares.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/video_v4l2.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/demo.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/lk_homography.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/turing.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/stereo_match.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/grabcut.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/color_histogram.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/mser.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/deconvolution.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/digits_adjust.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/hist.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/facedetect.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/inpaint.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/gabor_threads.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/mouse_and_match.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/kmeans.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/digits_video.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/_doc.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/plane_ar.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/find_obj.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/lappyr.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/plane_tracker.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/lk_track.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/feature_homography.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/peopledetect.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/_coverage.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/fitline.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/digits.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/morphology.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/texture_flow.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/camshift.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/video_threaded.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/coherence.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/opencv_version.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/dft.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/common.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/logpolar.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/gaussian_mix.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/watershed.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/kalman.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/mosse.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/houghlines.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/floodfill.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/contours.py
--- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/distrans.py
+...
+-- Installing: /usr/local/opencv3.2/include/opencv2/opencv.hppans.py
 -- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/edge.py
 -- Installing: /usr/local/opencv3.2/share/OpenCV/samples/python/asift.py
 ```
@@ -344,3 +300,4 @@ CUDA_nppi_LIBRARY (ADVANCED)
 solved:   
 
 https://blog.csdn.net/u014613745/article/details/78310916  
+

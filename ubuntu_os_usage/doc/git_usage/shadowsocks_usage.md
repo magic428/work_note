@@ -207,6 +207,41 @@ iOS: 目前大陆 App Store 商店很多 SS/SSR 软件都被下架了, 我们需
 
 ![](snapshots/ssr-client.png)  
 
+## 防止被墙的一些办法  
+
+- 内核版本一定要更新;  
+- centos 7 安装 bbr;  
+- docker 搭建 ssr;  
+- 使用 auth_sha1_v4_ 协议 + tls1.2_ticket_auth 混淆;  
+
+## My Issues  
+
+1) ssr start 启动时打印如下消息.  
+
+```bash
+Testing Connection...
+jq in use
+parse error: Invalid numeric literal at line 17, column 32
+```
+
+通过查看 ssr 脚本文件后发现这是因为解析 config.json 时不支持 "//" 开头的注释语句.  
+
+```json
+{
+    "server": "45.x.x.250", 
+    ...
+    "additional_ports" : {},     // this is only for multi-users
+    "additional_ports_only" : false,   // this is only for multi-users
+    "timeout": 120, 
+    "fast_open": false
+}
+```
+
+将这两句中附带的注释语句删除即可.  
+
+2) 在 windows 的 chrome 浏览器中不需要使用 switch-omega 代理管理软件, 但是在 ubuntu 中则必须使用该代理管理软件才能访问 google.  
+
+
 ## 常见问题参考解决方法  
 
 1、用了一段时间发现ssr账号用不了了?  

@@ -38,3 +38,8 @@ update-initramfs -u
 ```
 
 重启后再次进入系统, nouveau 驱动被禁用。 使用 NVIDIA 官网下载好的离线驱动安装包安装显卡驱动即可.    
+
+## ubuntu 1804  
+https://blog.csdn.net/kjopojd/article/details/99344672
+
+

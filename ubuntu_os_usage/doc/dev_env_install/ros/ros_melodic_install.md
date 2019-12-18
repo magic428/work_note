@@ -1,8 +1,7 @@
-# ROS Kinetic 环境搭建
+# ROS Melodic 环境搭建
  
-> Ubuntu 16.04  
-> ROS kinetic官网：http://wiki.ros.org/kinetic/Installation/Ubuntu  
-> 注意, 不能安装在 ubuntu 1804 系统上. ROS Kinetic ONLY supports Wily (Ubuntu 15.10), Xenial (Ubuntu 16.04) and Jessie (Debian 8) for debian packages.  
+> Ubuntu 18.04  
+> ROS Melodic 官网：http://wiki.ros.org/melodic/Installation/Ubuntu  
 
 ## 1. 配置软件安装源   
 
@@ -50,31 +49,31 @@ sudo apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-key C1CF6E31E6BADE8868B
 ```
 
 ```bash
-sudo apt-get install ros-kinetic-desktop
+sudo apt-get install ros-melodic-desktop
 ```
 
 注意不要安装 full 版，Gazebo2 不能与更新版本的 Gazebo 共存，需要单独安装所需功能包即可。  
 然后，安装 ros-gazebo 接口库等，以 7 为例如下:    
 
 ```
-sudo apt-get install ros-kinetic-gazebo7-  
+sudo apt-get install ros-melodic-gazebo7-  
 ```
 
-安装完毕后, ROS (kinetic) 就可以和 Gazebo7 一起使用了。
+安装完毕后, ROS (melodic) 就可以和 Gazebo7 一起使用了。
 
 **安装功能包**:  
 
 ```bash
-sudo apt-get install ros-kinetic-PACKAGE
+sudo apt-get install ros-melodic-PACKAGE
 
 # 例如:  
-sudo apt-get install ros-kinetic-slam-gmapping
+sudo apt-get install ros-melodic-slam-gmapping
 ```
 
-**如果不知道确切的 ros 包名, 可以使用下面的命令查找在 kinetic 中可以使用的功能包**:  
+**如果不知道确切的 ros 包名, 可以使用下面的命令查找在 melodic 中可以使用的功能包**:  
 
 ```bash
-apt-cache search ros-kinetic
+apt-cache search ros-melodic
 ```
 
 ## 4. 初始化 rosdep  
@@ -91,29 +90,37 @@ sudo rosdep init && rosdep update
 reading in sources list data from /etc/ros/rosdep/sources.list.d
 Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/osx-homebrew.yaml
 Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/base.yaml
-Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/Python.yaml
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/python.yaml
 Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/ruby.yaml
 Hit https://raw.githubusercontent.com/ros/rosdistro/master/releases/fuerte.yaml
-Query rosdistro index https://raw.githubusercontent.com/ros/rosdistro/master/index.yaml
-Add distro "groovy"
-Add distro "hydro"
-Add distro "indigo"
-Add distro "jade"
+Query rosdistro index https://raw.githubusercontent.com/ros/rosdistro/master/index-v4.yaml
+Skip end-of-life distro "ardent"
+Skip end-of-life distro "bouncy"
+Add distro "crystal"
+Add distro "dashing"
+Add distro "eloquent"
+Skip end-of-life distro "groovy"
+Skip end-of-life distro "hydro"
+Skip end-of-life distro "indigo"
+Skip end-of-life distro "jade"
 Add distro "kinetic"
-updated cache in /home/relaybot/.ros/rosdep/sources.cache
+Skip end-of-life distro "lunar"
+Add distro "melodic"
+Add distro "noetic"
+updated cache in /home/magic/.ros/rosdep/sources.cache
 ```
 
 ## 5. 配置 ROS 启动环境
 
 ```bash
-$ echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+$ echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
-注意当安装多个ROS发行版，使用 kinetic 需要用到下面命令:  
+注意当安装多个ROS发行版，使用 melodic 需要用到下面命令:  
 
 ```bash
-$ source /opt/ros/kinetic/setup.bash
+$ source /opt/ros/melodic/setup.bash
 ```
 
 ## 6. 安装 building package 的依赖包

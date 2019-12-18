@@ -24,8 +24,9 @@ git clone https://github.com/stevenlovegrove/Pangolin
 2.  安装依赖包  
 
 ```bash
-sudo apt-get install libglew-dev
+sudo apt-get install libglew-dev wayland-protocols
 ```
+
 3. 编译安装   
 
 ```bash
