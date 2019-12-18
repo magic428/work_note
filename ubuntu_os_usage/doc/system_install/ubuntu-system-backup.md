@@ -1,49 +1,32 @@
-# Ubuntu 14.04 系统安装     
+# Ubuntu 系统安装     
 
-## Ubuntu 中手动添加 windows 启动项
+## Ubuntu 系统备份和恢复 
 
-前提: Ubuntu 安装为 UEFI 引导, Windows 安装也为 UEFI 引导.   
+这篇文章给大家详细介绍了 `Ubuntu` 备份和恢复的方法,  使用 tar 工具就可以直接备份和恢复.  
 
-```
-menuentry "Windows 10 Profession" {
-    insmod part_msdos
-    insmod ntfs
-    set root=(hd1,msdos1)
-    search --no-floppy --fs-uuid --set=root 9A087D21087CFE17
-    chainloader ($root)/Windows/Boot/EFI/bootmgfw.efi
-}
-```
+**注意：**  
 
-如果 Ubuntu 安装为 UEFI 引导, Windows 安装为 BIOS 引导, 则这个添加项并不起作用.  
-
-## Ubuntu 14.04 系统备份和恢复 
-
-这篇文章给大家详细介绍了`Ubuntu 14.04`备份和恢复的方法， 使用 tar 工具就可以直接备份和恢复.    
-
-> 注意：  
-
-(1) 一定要重新备份下：`/boot`和`/etc/fstab`，然后再执行恢复命令。   
-(2) 在重新启动之前，一定要将这两个这些文件更新。  
-
+(1) 一定要重新备份下：`/boot`和`/etc/fstab`, 然后再执行恢复命令.    
+(2) 在重新启动之前, 一定要将这两个这些文件更新.   
 
 ### 1. 清理缓存、回收站, 删除系统不再使用的孤立软件   
 
 ```bash  
 # 将已经删除了的软件包的.deb安装文件从硬盘中删除掉
 $ sudo apt-get autoclean   
-# 类似上面的命令，但它删除包缓存中的所有包。   
+# 类似上面的命令, 但它删除包缓存中的所有包.    
 $ sudo apt-get clean
 $ sudo apt-get autoremove
 ```
  
-### 2. 使用`tar`备份  
+### 2. 使用 tar 备份  
 
 1) 命令及参数解释    
 
 v: 显示详细的压缩信息   
-c： 创建tar包   
-j： 使用bzip2压缩格式    
-z： 使用gzip压缩格式    
+c： 创建 tar 包   
+j： 使用 bzip2 压缩格式    
+z： 使用 gzip 压缩格式    
 p： 使用绝对路径    
 f： 生成的压缩文件的路径    
 
@@ -53,18 +36,18 @@ f： 生成的压缩文件的路径
 $ su - root
 ```
 
-3) 使用 `gzip` 压缩格式（压缩略低，但是速度快）    
+3) 使用 gzip 压缩格式 (压缩略低, 但是速度快)  
 
 ```bash
 $ tar vzcpf /media/magic/SeagatePlus/work/ubuntu-sys-bak/ubuntu_`date +%Y%m%d_%H`.tar.gz --exclude=/proc --exclude=/dev --exclude=/mnt --exclude=/media --exclude=/boot --exclude=/lost+found --exclude=/cdrom --exclude=/tmp --exclude=/sys --exclude=/home/magic/.cache --exclude=/etc/fstab --exclude=/home/magic/work --exclude=/home/magic/share --exclude=/home/magic/data --exclude=/run  / > /media/magic/SeagatePlus/work/ubuntu-sys-bak/ubuntu_`date +%Y%m%d_%H`.log 2> /media/magic/SeagatePlus/work/ubuntu-sys-bak/ubuntu_`date +%Y%m%d_%H`.error
 ```
 
-其中，`-exclude=`表示这些目录并不会被打包。这里有：`/proc，/dev，/mnt，/media，/lost+found，/cdrom，/tmp，/sys，/home/magic/.cache，/run`。    
+其中, `-exclude=` 表示这些目录并不会被打包. 这里有：/proc, /dev, /mnt, /media, /lost+found, /cdrom, /tmp, /sys, /home/magic/.cache, /run.     
 
-- 如果你的硬盘已经分区了`/home`，则应该对`/home`目录单独备份.    
+- 如果你的硬盘已经分区了`/home`, 则应该对`/home`目录单独备份;   
 - 不备份保存备份得到的镜像文件所在的目录.   
 
-4) 使用 `bzip2` 压缩格式（压缩略高，但是速度慢）   
+4) 使用 bzip2 压缩格式 (压缩略高, 但是速度慢)  
 
 ```bash
 $ tar vjcpf /home/magic/data/ubuntu_`date +%Y%m%d`.tar.bz2 --exclude=/proc --exclude=/dev --exclude=/mnt --exclude=/media --exclude=/lost+found --exclude=/cdrom --exclude=/tmp --exclude=/sys --exclude=/home/magic/.cache --exclude=/home/magic/data --exclude=/home/magic/work --exclude=/etc/fstab --exclude=/boot --exclude=/run  / > /home/magic/data/ubuntu_`date +%Y%m%d`.log 2> /home/magic/data/ubuntu_`date +%Y%m%d`.error
@@ -95,7 +78,7 @@ tar -cvf  ubuntu_20180907_21.tar.gz --remove-files /home/magic/data
 
 ### 5. 恢复系统    
 
-将备份文件拷贝到 / 目录，执行恢复命令：   
+将备份文件拷贝到 / 目录, 执行恢复命令：   
 
 1) 使用 gzip 格式   
 
@@ -127,6 +110,7 @@ tar vzcpf /media/magic/SeagatePlus/work/ubuntu-sys-bak/ubuntu_`date +%Y%m%d_%H`.
 ```bash
 tar vzcpf /media/magic/SeagatePlus/work/ubuntu-sys-bak/opt_`date +%Y%m%d_%H`.tar.gz --exclude=/home/magic/opt/exclude /home/magic/opt/ > /media/magic/SeagatePlus/work/ubuntu-sys-bak/opt_`date +%Y%m%d_%H`.log
 ```
+
 3) 备份 VirtualBox 中的镜像文件   
 
 ```bash

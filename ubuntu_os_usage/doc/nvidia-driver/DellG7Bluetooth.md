@@ -1,35 +1,49 @@
-Hi, @wjbarid,
+# Ubuntu 1804 - Dell G7 - Intel 9260 蓝牙驱动问题
 
-In order to determine the right hardware spec on your device, please attach `sudo lspci -vvnnk` output. It will contains subsystem ID that can be used to find the right iwlwifi model.
+Dell G7 7590 笔记本安装完成 ubuntu 1804 之后无法使用蓝牙模块, 并且 dmesg 会打印如下消息:  
 
-For bluetooth firmware blob name, you should try:
+```bash
+Bluetooth: hci0: request failed to create LE connection: status 0x0c (Intel 9260)
+```
 
-1. clone https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git and replace the intel/ subdirectory. Something like:
+这是内核中的一个 bug, bug 提交在这里: https://bugs.launchpad.net/ubuntu/+source/linux-firmware/+bug/1835449   
 
-  $ sudo mv /lib/firmware/intel /lib/firmware/intel.orig
-  $ sudo cp -a _git_cloned_firmwares_/intel /lib/firmware
+## 解决方案  
 
-2. power off your machine completely and turn it on again *after* 3 minutes or so.
+In order to determine the right hardware spec on your device, please attach `sudo lspci -vvnnk` output. It will contains subsystem ID that can be used to find the right iwlwifi model.  
 
-3. capture the dmesg output for Bluetooth|hci:
+1) 下载内核固件代码  
 
-  $ dmesg | egrep -i 'blue|hci'
+```bash
+git clone https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git 
 
-You should find something like:
+```
 
+2) 替换 /lib/firmware/intel/ 目录中的内容. 例如:  
+
+```bash
+$ sudo mv /lib/firmware/intel /lib/firmware/intel.orig
+$ sudo cp -a _git_cloned_firmwares_/intel /lib/firmware
+```
+
+3) 关机后等待 3 分钟之后再开机, 注意不是直接重启. 
+
+关机三分钟是为了让蓝牙模块完全停止工作。  
+
+
+4) 查看 dmesg 命令输出的信息中是否包含 Bluetooth|hci:  
+
+```bash
+$ dmesg | egrep -i 'blue|hci'
+```
+
+如果发现其中有类似下面这行输出, 则蓝牙驱动可以正常工作了:  
+
+```bash
   Bluetooth: hci0: Found device firmware: intel/ibt-11-5.sfi
-
-
-三分钟是为了让蓝牙模块完全停止工作。  
+```
 
 不要更改 /etc/bluetooth/main.conf 中的任何内容。  
-
-
-Hi @vincentbou, I'll need you to run `apport-collect 1835449` in the first boot after completely power off again. I need to know which firmware blob, probably in the name "intel/ibt-*", to be updated.
-
-See also http://manpages.ubuntu.com/manpages/bionic/man1/apport-bug.1.html for log collecting with appor
-
-it worked！！！
 
 ## 参考资料  
 
@@ -38,13 +52,9 @@ https://bugs.launchpad.net/ubuntu/+source/linux-firmware/+bug/1835449
 https://bugs.launchpad.net/ubuntu/+source/linux-firmware/+bug/1836467  
 
 
-BCD 编辑 
+## 一个成功的 dmesg 示例  
 
-http://tieba.baidu.com/p/5003454493?pid=104792401528&cid=0&referer=www.cnblogs.com&pn=0&&red_tag=s0145650392
-
-使用老毛桃的UEFI GPT 引导, 设置系统磁盘和引导所在磁盘.  
-
-
+```bash
 [    1.143254] usb usb2: Manufacturer: Linux 5.1.16-050116-generic xhci-hcd
 [    1.479384] usb 1-1: new high-speed USB device number 2 using xhci_hcd
 [    1.975522] usb 1-2: new full-speed USB device number 3 using xhci_hcd
@@ -82,3 +92,4 @@ http://tieba.baidu.com/p/5003454493?pid=104792401528&cid=0&referer=www.cnblogs.c
 [   25.819305] Bluetooth: RFCOMM TTY layer initialized
 [   25.819311] Bluetooth: RFCOMM socket layer initialized
 [   25.819318] Bluetooth: RFCOMM ver 1.11
+```
