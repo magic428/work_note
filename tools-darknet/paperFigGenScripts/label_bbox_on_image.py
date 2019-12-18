@@ -2,14 +2,18 @@
 #!/usr/bin/env python3
 
 '''
-label tool, label files' format similar to VOC: .xml, .txt;  
+论文或汇报 PPT 中的样本标注工具
+
+标注框宽度为 5, 标注框的颜色为红色.  
+
+标注完的结果保存为以 labeled_ 开头的同名文件.  
 
 Usage: 
 
-    python3 label_tool.py --path PATH
+    python3 label_bbox_on_image.py --path PATH
 
 Help: 
-    python3 label_tool.py -h  
+    python3 label_bbox_on_image.py -h  
 
 '''
 
@@ -33,7 +37,8 @@ current_jpg_name = ''
 
 wndName = "ESC close, s save, c clean, p back"
 className = ["bigcoal", "roller", "person", "workBoard", "fullFoldBoard", "halfFoldBoard"]
-colors = [(0, 255, 255), (0, 255, 0), (0, 0, 255), (100, 0, 180), (255, 180, 0), (180, 0, 100), (150, 0, 255)]
+#colors = [(0, 255, 255), (0, 255, 0), (0, 0, 255), (100, 0, 180), (255, 180, 0), (180, 0, 100), (150, 0, 255)]
+colors = [(0, 0, 255), (100, 0, 180), (255, 180, 0), (180, 0, 100), (150, 0, 255)]
 
 show = []
 convas = []
@@ -42,7 +47,9 @@ dpoint = []
 epoint = []
 objs = []
 waitSecDown = False
-linewidth = 5;
+linewidth = 5
+currentClass = 0
+labeled_num_rest = 0
 
 def refreshCurrentShow(labeled_num_rest):
 
@@ -171,8 +178,12 @@ def saveXML(name, objs, cls, w, h):
             txt.write("%d,%d,%d,%d,%d,%s\n" % (pmin[0], pmin[1], pmax[0], pmax[1], cls, className[cls]))
 
 def saveLabelResult(name, img):
+    base_name_sep = name.rfind('/')
+    name_pre = name[ : base_name_sep+1]
+    name_post = name[base_name_sep+1 : ]
+    save_name = name_pre + "labeled_" + name_post
     # 100 is the highest quality.
-    cv2.imwrite(name, img, [int(cv2.IMWRITE_JPEG_QUALITY), 100]) 
+    cv2.imwrite(save_name, img, [int(cv2.IMWRITE_JPEG_QUALITY), 100]) 
 
 def sort_as_filename(imgs):
         # 使用数字排序
@@ -197,7 +208,7 @@ def do_label(imgs):
     '''
     global currentClass, current_labeled_cls, show, convas, convas_mouse, objs, labeled_num_rest
 
-    endOf = False;
+    endOf = False
     i = loadBreakpoint()  # 标注的图片编号断点
 
     while True:
@@ -223,10 +234,10 @@ def do_label(imgs):
             refreshCurrentShow(labeled_num_rest)
             cv2.setMouseCallback(wndName, onMouse)
             key = cv2.waitKey()
-            key = key & 0xFF;
+            key = key & 0xFF
 
             if key == 0x1B: #ESC
-                endOf = True;
+                endOf = True
                 break
 
             if key >= ord('1') and key <= ord('9'):
@@ -259,14 +270,14 @@ def do_label(imgs):
                 i = i - 2
                 # if len(objs)>0:
                 #     del objs[len(objs)-1]
-                break;
+                break
 
             if key == ord('s'): #s
                 # saveXML("%s/%s.xml" %(path, imgs[i][0][:pos]), objs, currentClass, show.shape[1], show.shape[0])
                 saveLabelResult(imgs[i][1], convas)
                 break
 
-        if endOf: break;
+        if endOf: break
         i = i+1
 
 

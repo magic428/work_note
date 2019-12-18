@@ -1,27 +1,35 @@
 # Ubuntu 16.04 安装 boost 库  
 
-> 使用 apt install 之后的包是无法正常使用 cmake 的.
+> 不建议使用 apt install 之后的包, 其中的很多功能都是是无法正常使用的.  
+> boost 版本确定: 先安装 ros, 然后查看 ros 使用的 boost 版本, 最后自己下载编译对应的 boost 版本安装, 这样就不会造成系统内部的 boost 版本冲突.   
 
-到 boost 官网安装一个boost库的压缩包，我下的是1.67.0版本
-执行下面的命令解压
+接下来开始安装.  
+
+到 boost 官网安装一个boost库的压缩包，我下的是 1.67.0 版本. 执行下面的命令解压:  
 
 ```bash
 tar -xzvf boost_1_67_0.tar.gz
 ```
-解压出来以后，进入解压出来的文件夹，执行下面的命令
+解压出来以后，进入解压出来的文件夹，执行下面的命令安装依赖库,   
+
+```bash
+sudo apt-get install libbz2-dev
+```
+
+否则会在编译 `libboost_iostreams.so` 的时候出错.  然后执行下面的命令进行配置:  
 
 ```bash
 sudo ./bootstrap.sh
 ```
 
-在执行下面的命令，这样头文件就被默认安装在/usr/local/include头文件下，库文件就被默认安装在/usr/local/lib下
+在执行下面的命令，这样头文件就被默认安装在 /usr/local/include 头文件下，库文件就被默认安装在 /usr/local/lib 下:  
 
 ```bash
-sudo ./b2 install
 b2 toolset=gcc cxxflags="-std=c++11"
+sudo ./b2 install
 ```
 
-这个时候就已经安装好了，不过在编译的时候可能还会有一点小问题，比如有下面的代码
+这个时候就已经安装好了，不过在编译的时候可能还会有一点小问题，比如有下面的代码:  
 
 ```cpp
 #include <iostream>
@@ -92,4 +100,18 @@ elseif(NOT Boost_VERSION VERSION_LESS 106200 AND Boost_VERSION VERSION_LESS 1068
     set(_Boost_WAVE_DEPENDENCIES filesystem system serialization thread chrono date_time atomic)
     set(_Boost_WSERIALIZATION_DEPENDENCIES serialization)
 ```
+
+2. 更换系统中的 boost 版本  
+
+cmake 检测的是 `include/boost/version.hpp` 文件中的宏定义 `BOOST_LIB_VERSION`, 必须要删除 /usr/local/include/boost 和 /usr/local/lib/libboost_* 文件.  
+
+然后再运行 `sudo ./b2 install` 重新安装 boost 头文件和库文件即可.  
+
+切记: 一定要先删除原来的目录.  
+
+```bash
+sudo rm -rf /usr/local/include/boost 
+sudo rm -rf /usr/local/lib/libboost_* 
+```
+
 

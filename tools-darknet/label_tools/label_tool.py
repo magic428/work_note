@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 
 '''
-label tool, label files' format similar to VOC: .xml, .txt;  
+label tool, label files' format similar to VOC: .xml, .txt  
 
 Usage: 
 
@@ -44,6 +44,7 @@ dpoint = []
 epoint = []
 objs = []
 waitSecDown = False
+currentClass = 0
 
 def refreshCurrentShow(labeled_num_rest):
 
@@ -295,10 +296,10 @@ def do_label(imgs):
             refreshCurrentShow(labeled_num_rest)
             cv2.setMouseCallback(wndName, onMouse)
             key = cv2.waitKey()
-            key = key & 0xFF;
+            key = key & 0xFF
 
             if key == 0x1B: #ESC
-                endOf = True;
+                endOf = True
                 break
 
             if key >= ord('1') and key <= ord('9'):

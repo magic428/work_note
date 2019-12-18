@@ -51,3 +51,6 @@ blacklist nouveau
 options nouveau modeset=0
 ```
 
+## 在 ubuntu 1804 下如何扩展屏幕  
+
+https://blog.csdn.net/kjopojd/article/details/99344672  

@@ -1,6 +1,6 @@
-# Ubuntu 16.04 源码编译安装 OpenCV2.4.10
+# Ubuntu 18.04 源码编译安装 OpenCV2.4.10
 
-> 声明：如果安装中出现问题，可以去本文最后的问题模块中寻找解决方案。  
+> 声明：如果安装中出现问题，可以去本文最后的问题 Issues 模块中寻找解决方案。  
 
 ## 1. 下载 OpenCV 源码  
 
@@ -22,34 +22,49 @@ sudo apt install build-essential cmake libgtk2.0-dev pkg-config python-dev pytho
 
 ## 4. 编译配置   
 
-```
-$ mkdir build
-$ cd build/
-$ cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D CUDA_GENERATION=Kepler -D WITH_CUDA=OFF ../../  
+```bash
+mkdir build
+cd build/
+# ubuntu 1604 使用如下命令
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D CUDA_GENERATION=Kepler -D WITH_CUDA=OFF ../  
+# ubuntu 1804 使用如下命令
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D CUDA_GENERATION=Kepler -D WITH_CUDA=OFF -D WITH_FFMPEG=OFF -DENABLE_PRECOMPILED_HEADERS=OFF ../
 ```
 
 安装所有的 `lib` 文件都会被安装到 `/usr/local` 目录。   
 
-**注意**:   
+**注意命令行的设置参数都是有原因的**:   
 
-这里加上 `-D CUDA_GENERATION=Kepler` 或者 `-D CUDA_GENERATION=auto` 是因为我的显卡计算能力较弱，会报如下错误： 
+1) 加上 `-D CUDA_GENERATION=Kepler` 或者 `-D CUDA_GENERATION=auto` 是因为我的显卡计算能力较弱，会报如下错误： 
 
 ```
-[  2%] Building NVCC (Device) object modules/core/CMakeFiles/cuda_compile.dir/__/dynamicuda/src/cuda/./cuda_compile_generated_matrix_operations.cu.o
 nvcc fatal   : Unsupported gpu architecture 'compute_11'
 CMake Error at cuda_compile_generated_matrix_operations.cu.o.cmake:208 (message):
   Error generating
-  /home/klm/Downloads/opencv-2.4.10/cmake/release/modules/core/CMakeFiles/cuda_compile.dir/__/dynamicuda/src/cuda/./cuda_compile_generated_matrix_operations.cu.o
+```
 
+2) 加上 `-DENABLE_PRECOMPILED_HEADERS=OFF` 是为了防止编译的时候找不到 stdlib.h   
 
-make[2]: *** [modules/core/CMakeFiles/cuda_compile.dir/__/dynamicuda/src/cuda/./cuda_compile_generated_matrix_operations.cu.o] Error 1
-make[1]: *** [modules/core/CMakeFiles/opencv_core.dir/all] Error 2
-make: *** [all] Error 2
+```bash
+Error compiling OpenCV, fatal error: stdlib.h: No such file or directory
+```
+
+Try by disabling pre-compiled headers, either from cmake-gui or using the command line parameter:  
+
+```bash
+-DENABLE_PRECOMPILED_HEADERS=OFF
+```
+
+3) 加上 `-D WITH_FFMPEG=OFF` 是为了防止编译的时候 ffmpeg error   
+
+```bash
+ffmpeg_codecs.hpp:104:7: error: ‘CODEC_ID_H264’ was not declared in this scope
 ```
 
 ## 5. 编译并安装  
 
-如果计算机中安装过`cuda8`，那么在此之前需要修改`opencv-2.4.10/modules/gpu/src/graphcuts.cpp`：     
+如果计算机中安装过`cuda8`，那么在此之前需要修改`opencv-2.4.10/modules/gpu/src/graphcuts.cpp`：  
+
 ```
 #if !defined (HAVE_CUDA) || defined (CUDA_DISABLER)   
 # 改为  
@@ -83,8 +98,6 @@ sudo make install   # 编译完成后安装.
 ```bash
 sudo ldconfig -v | grep "opencv"
 ```
-
-**PS**： 可能会出错，但是没有问题。     
 
 - 2) 添加`OpenCV`的头文件位置，首先在 `/ect/profile` 文件中添加如下信息：    
 
@@ -153,42 +166,30 @@ make
 
 ## 问题总结- issues   
 
-1. `error: ‘NppiGraphcutState’ has not been declared`  
-
-安装 cuda 之后再安装 opencv 时出现错误。因为 cuda8.0 较新，要编译通过需要修改源码：   
-
-修改 `opencv-2.4.10/modules/gpu/src/graphcuts.cpp`：   
-
-```cpp
-#if !defined (HAVE_CUDA) || defined (CUDA_DISABLER)   
-# 改为  
-#if !defined (HAVE_CUDA) || defined (CUDA_DISABLER) || (CUDART_VERSION >= 8000) 
-```
-
-重新编译即可。   
-
-2. error:`/usr/bin/ld: cannot find -lcufft -lnpps -lnppi -lnppc -lcudart`  
-
-库文件丢失问题. 需要确认系统目录中是否存在这些库文件, 如果存在, 则是软链接缺失的问题.  
+1) -Werror=address error.  
 
 ```
-sudo ln -s /usr/local/lib/libnppc.so /usr/local/cuda/lib64/libnppc.so
-sudo ln -s /usr/local/cuda/lib64/libnppc.so /usr/local/lib/libnppc.so
-sudo ln -s /usr/local/cuda/lib64/libnpps.so /usr/local/lib/libnpps.so
-sudo ln -s /usr/local/cuda/lib64/libnppi.so /usr/local/lib/libnppi.so
-sudo ln -s /usr/local/cuda/lib64/libcufft.so /usr/local/lib/libcufft.so
+~/opt/opencv-2.4.11/modules/contrib/src/chamfermatching.cpp:969:30: 
+error: the compiler can assume that the address of ‘annotate_img’ will never be NULL [-Werror=address]
+                 if (&annotate_img!=NULL) {
+                                  ^
 ```
 
-3. fatal error: `ImfChromaticities.h: No such file or directory`   
+需要把 `-Werror=address` 编译选项去掉. opencv 是使用 cmake 编译的，将文件 cmake/OpenCVCompilerOptions.cmake 的 74 行注释掉即可.   
+
+```
+endif()
+#add_extra_compiler_option(-Werror=address)
+add_extra_compiler_option(-Werror=sequence-point)
+```
+
+2) dumpversion error  
 
 ```bash
-sudo apt-get install libopenexr-dev
+CMake Error at cmake/OpenCVDetectCXXCompiler.cmake:85 (list):
+  list GET given empty list
+Call Stack (most recent call first):
+  CMakeLists.txt:109 (include)
 ```
 
-4. fatal error: `tiff.h: No such file or directory`  
-
-```bash
-sudo apt-get install libtiff5-dev
-sudo apt-get install libjasper-dev
-```
-
+修改 opencv2.4.11/cmake/OpenCVDetectCXXCompiler.cmake 文件, 将其中的 "dumpversion" 改为 "dumpfullversion".  

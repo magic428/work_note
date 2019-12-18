@@ -106,7 +106,7 @@ CMAKE_BUILD_TYPE
 CMAKE_INSTALL_PREFIX             /usr/local
 PCL_SHARED_LIBS                  ON
 PCL_VERSION                      1.0.0
-VTK_DIR                          /usr/local/lib/vtk-5.6
+VTK_DIR                          /usr/local/lib/cmake/vtk-7.1
 ```
 
 编译安装  
