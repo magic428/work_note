@@ -258,3 +258,4 @@ vultr 和其他的国外商家一样, 都是使用工单的形式与客服联系
 # 参考资料  
 
 [1] https://github.com/Alvin9999/new-pac/wiki/%E8%87%AA%E5%BB%BAss%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B  
+[2] http://ss.pythonic.life/  

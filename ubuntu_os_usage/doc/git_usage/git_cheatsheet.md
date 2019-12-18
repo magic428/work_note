@@ -191,3 +191,12 @@ git pull origin master --allow-unrelated-histories
 Windows上设置避免每次git push 都需要账号密码, 在 C:\Users\luojie 目录下 能看到 [.gitconfig] 这个文. 
 
 可以使用 SSH-Key 进行授权访问.  
+
+
+
+
+## 7. 设置自动转换换行符  
+
+```bash
+git config --global core.autocrlf false
+```

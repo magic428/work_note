@@ -14,7 +14,9 @@ sudo rm -rf /etc/X11/xorg.conf
 sudo cp xorg.conf.failsafe xorg.conf 
 ```
 
-之后进入到最新的内核版本后, 使用 `Ctrl + Alt + F[1-7]` 进入命令行, 重新安装 NVIDIA 官网下载的驱动.  
+如果这步不起作用, 则只运行 `sudo rm -rf /etc/X11/xorg.conf` 即可, 之后卸载掉系统中的 NVIDIA 驱动.  
+
+然后进入到最新的内核版本后, 使用 `Ctrl + Alt + F[1-7]` 进入命令行, 重新安装 NVIDIA 官网下载的驱动.  
 
 ```bash
 sudo service lightdm restart 
@@ -22,3 +24,4 @@ sudo ./NVIDIA-Linux-x86_64-418.74.run
 ```
 
 所有的选项中全部选择 yes, 安装完成后重新启动即可.  
+
