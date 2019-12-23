@@ -1,14 +1,14 @@
-# `git cheatsheet`   
+# Git Cheatsheet  
 
 ## 1. 仓库添加/删除操作  
 
-(1) 添加远程仓库   
+**(1) 添加远程仓库**   
 
 ```bash
 $ git remote add origin git@github.com:gzj2013/xxx.git
 ```
 
-(2) 删除远程仓库   
+**(2) 删除远程仓库**   
 
 ```bash
 $ git remote rm origin 
@@ -37,11 +37,11 @@ vscode/
 
 ## 3. git 代码管理日常  
 
-(1) git add -u  
+**(1) git add -u**  
 
 只是删除了本地文件, 远程仓库的并没有删除, 但是此时想要直接删除远程仓库中对应的文件。   
 
-(2) 撤销修改     
+**(2) 撤销修改** 
 
 **场景1**： 当你改乱了工作区某个文件的内容, 想直接丢弃工作区的修改时, 用命令:   
 
@@ -82,7 +82,7 @@ git checkout xxx_file
 $ git commit --amend
 ```
 
-(3) 合并冲突   
+**(3) 合并冲突**   
 
 ```bash
 '<<<<<<<'   
@@ -94,14 +94,14 @@ B的修改
 
 删除的文件内容需要统一, 要么所有的地方要么都保留 A 的修改, 要么都保留 B 的修改。   
 
-(4) 文件删除操作  
+**(4) 文件删除操作**  
 
 `git rm` 有两个不同的选项操作.  
 
 * git rm --cached "file_xxx",  不删除物理文件, 仅将该文件从 Git 远程仓库中删除；   
-* git rm --f "file_xxx",  不仅将该文件从  Git  远程仓库中删除, 还会将物理文件删除（且不会经过回收站）.   
+* git rm --f "file_xxx",  不仅将该文件从  Git  远程仓库中删除, 还会将物理文件删除 (且不会经过回收站) .   
 
-(5) 将本地仓库和多个远程仓库关联  
+**(5) 将本地仓库和多个远程仓库关联**  
 
 比如你有 oschina 和 github 两个远程仓库.   
 
@@ -122,7 +122,7 @@ git push <name> <branch>, 其中, name 表示你在上一步给它起的名字, 
 
 ## 4. 配置 git 使用网络代理, 加速 git clone.  
 
-(1) 配置使用 SS5 代理.  
+**(1) 配置使用 SS5 代理**  
 
 ```bash
 $ git config --global http.proxy 'socks5://127.0.0.1:1080' 
@@ -133,7 +133,7 @@ $ git config --global --unset http.proxy
 $ git config --global --unset https.proxy
 ```
 
-(2) 配置使用非 ss5 的代理.  
+**(2) 配置使用非 ss5 的代理**  
 
 ```bash
 git config --global http.proxy http://127.0.0.1:36718
@@ -156,47 +156,66 @@ git config --glb.com port 22: Connection timed out
 
 **解决办法**： 具体操作步骤详见这篇博客 - [git clone 加速](/ubuntu_os_usage/doc/git_usage/doc/accelerate_git_clone.md)   
 
-## 6. https 方式每次提交代码都要输入密码   
 
-按照如下设置即可输入一次就不用再手输入密码的困扰而且又享受 https 带来的极速。  
-
-1) 设置记住密码（默认15分钟）   
+## 6. 设置 git 进行"换行符"自动转换  
 
 ```bash
-git config --global credential.helper cache
+git config --global core.autocrlf false
 ```
 
-2) 如果想自己设置时间, 可以这样做  
+## Issues
+
+**1)  RPC failed; curl 55 Send failure: Connection was reset**  
+
+在网络情况不稳定下克隆项目时，可能会出现下图中的错误。
 
 ```bash
-git config credential.helper 'cache --timeout=3600'
+Enumerating objects: 34, done.
+...
+error: RPC failed; HTTP 400 curl 22 The requested URL returned error: 400 Failed reading client body
+fatal: the remote end hung up unexpectedly  
+Writing objects: 100% (24/24), 11.92 MiB | 11.01 MiB/s, done.
+Total 24 (delta 7), reused 0 (delta 0)
 ```
 
-这样就设置一个小时之后失效。   
+问题原因: http 缓存不够或者网络不稳定等。  
 
-3) 长期存储密码   
+解决方法: 打开 cmd，修改 git 配置 (加大 httpBuffer) 即可。  
 
 ```bash
-git config --global credential.helper store
+git config --global http.postBuffer 524288000
 ```
 
-## fatal: refusing to merge unrelated histories  
+**2) fatal: refusing to merge unrelated historie**s  
 
-使用下面的命令强行合并分支.    
+这是由于远程分支名称不同, 使用下面的命令强行合并分支.  
 
 ```bash
 git pull origin master --allow-unrelated-histories
 ```
 
-Windows上设置避免每次git push 都需要账号密码, 在 C:\Users\luojie 目录下 能看到 [.gitconfig] 这个文. 
+**3) https 方式每次提交代码都要输入密码**   
 
-可以使用 SSH-Key 进行授权访问.  
+按照如下设置即可输入一次就不用再手输入密码的困扰而且又享受 https 带来的极速。  
 
-
-
-
-## 7. 设置自动转换换行符  
+a) 设置记住密码 (默认 15 分钟)    
 
 ```bash
-git config --global core.autocrlf false
+git config --global credential.helper cache
 ```
+
+b) 也可以设置密码有效时间, 例如:设置一个小时之后密码失效.  
+
+```bash
+git config credential.helper 'cache --timeout=3600'
+```
+
+c) 长期存储密码   
+
+```bash
+git config --global credential.helper store
+```
+
+Windows上设置避免每次 git push 都需要账号密码, 在 C:\Users\luojie 目录下 能看到 [.gitconfig] 这个文. 
+
+可以使用 SSH-Key 进行授权访问.  
