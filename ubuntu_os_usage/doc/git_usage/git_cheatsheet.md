@@ -216,6 +216,4 @@ c) 长期存储密码
 git config --global credential.helper store
 ```
 
-Windows上设置避免每次 git push 都需要账号密码, 在 C:\Users\luojie 目录下 能看到 [.gitconfig] 这个文. 
-
-可以使用 SSH-Key 进行授权访问.  
+Windows上设置避免每次 git push 都需要账号密码, 在 C:\Users\luojie 目录下能看到 [.gitconfig] 这个文件. 另外也可以使用 SSH-Key 进行授权访问后即可无密码访问.  
