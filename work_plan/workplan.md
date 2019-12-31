@@ -207,6 +207,7 @@ Haze Detection and Removal in High Resolution Satellite Image with Wavelet Analy
 密码：admin12345
 
 rtsp://admin:admin12345@10.210.142.181:554/h264/ch1/main/av_stream
+rtsp://admin:admin123@192.168.207.175:554/ch1/main/av_stream
 ```
 
 2) 榆家梁 camera IP   
