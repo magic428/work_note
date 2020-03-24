@@ -12,6 +12,12 @@ Docker 的安装资源文件存放在`Amazon S3`, 会间歇性连接失败. 所�
 curl -sSL https://get.daocloud.io/docker | sh
 ```
 
+或  
+
+```bash
+sudo apt-get install docker docker-ce docker-engine
+```
+
 适用于 Ubuntu, Debian, Centos 等大部分 Linux 发行版本, 会 3 小时同步一次 Docker 官方资源.   
 
 ```bash
@@ -23,7 +29,7 @@ docker start/running, process 14394
 ## 2. 卸载 Docker     
 
 ```bash
-sudo apt-get remove docker docker-engine
+sudo apt-get remove docker docker-ce docker-engine
 ```
 
 卸载  Docker  后, /var/lib/docker/ 目录下会保留原 Docker 的镜像, 网络和存储卷等文件. 如果需要全新安装 Docker ,需要删除 /var/lib/docker/ 目录.  
