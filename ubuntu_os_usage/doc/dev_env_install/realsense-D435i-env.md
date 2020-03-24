@@ -145,7 +145,7 @@ sudo dmesg | tail -n 50
 ```bash
 mkdir build
 cd build
-cmake ../ -DBUILD_EXAMPLES=true
+cmake ../ -DBUILD_EXAMPLES=true -DBUILD_PYTHON_BINDINGS:bool=true
 make -j8
 sudo make install
 ```

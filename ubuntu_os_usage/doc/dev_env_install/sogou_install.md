@@ -52,11 +52,10 @@ $ sudo apt-get autoremove
 
 ## 搜狗输入法候选词是乱码  
 
-qimpanel需要kimpanel才能工作，所以需要安装fictx-module-kimpanel ……
-那个乱码的窗口是fcitx-ui-classic的窗口，不是qimpanel的窗口
+qimpanel 需要 kimpanel 才能工作，所以需要安装 fictx-module-kimpanel.乱码的窗口是 fcitx-ui-classic 的窗口，不是 qimpanel 的窗口.  
 
-~~~ 
+```bash
 sudo rm -rf ~/.config/SogouPY* ~/.config/sogou*
 sudo apt-get purge fcitx-ui-classic
 sudo apt-get install fictx-module-kimpanel
-~~~
+```
