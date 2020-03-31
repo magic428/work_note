@@ -58,7 +58,7 @@ while True:
 
         cv2.imshow("srteam", convas)
         key = cv2.waitKey(30)
-        key = key & 0xFF;
+        key = key & 0xFF
 
         if(key == ord('s') or key == ord('S')):
             grab = True

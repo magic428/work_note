@@ -16,7 +16,8 @@ break_point = 34
 
 # processing %d(%d)... (34, 50)
 
-
+grab = False
+ret = True
 for video_name in video_names:
     i = 0
     video_path = root_dir + video_name
@@ -36,30 +37,34 @@ for video_name in video_names:
             print("video error")
 
         ret, frame = cap.read()
+        cv2.imshow("srteam", frame)
+        key = cv2.waitKey(30)
+        key = key & 0xFF
 
-        # cv2.imshow("demo", frame)
-        # if(27 == cv2.waitKey(1)):
-        #     cv2.destroyAllWindows()
-        if not ret: 
-            print("split done!")
-            videos_cnt -= 1 
-            cnt += 1
-            print("processing {}({})...".format(cnt ,len(video_names)))
-            print("each video can split {} pics".format(img_cnt))
-            break
+        if(key == ord('s') or key == ord('S')):
+            grab = True
+        elif(key == ord('q') or key == ord('Q')):
+            grab = False
+        elif(key == 27):
+            grab = False
+            cap.release()
+            vw.release()
+            cv2.destroyAllWindows()
 
-        if i%split_step== 0:
-            # cv2.imwrite(data_dir+'mutilObjs_{:>06d}.jpg'.format(int(i/10)), frame, [int(cv2.IMWRITE_JPEG_QUALITY), 100]) 
-            if(img_cnt % 1000 == 0):
-                dir_idx += 1
-                # data_dir = "{}/{}{:>04d}/".format(pic_dir_pre, dataset_prefix, dir_idx)
-                data_dir = pic_dir_pre
-                if not os.path.exists(data_dir):
-                    os.makedirs(data_dir)
-                print("new dir...")
+        if grab:
+            if not ret: 
+                videos_cnt -= 1 
+                cnt += 1
+                print("each video can split {} pics".format(img_cnt))
+                break
+
+            data_dir = pic_dir_pre
 
             cv2.imwrite(data_dir+'{}{:>06d}.jpg'.format(dataset_prefix, img_cnt), frame, [int(cv2.IMWRITE_JPEG_QUALITY), 100]) 
             img_cnt += 1
+
         if(i == 100000):
             i = 0
         i += 1
+
+    print("split done!")
